@@ -1,0 +1,1 @@
+To generate trajectory - rosrun mav_trajectory_generation_ros traj_gen traj_gen.cpp

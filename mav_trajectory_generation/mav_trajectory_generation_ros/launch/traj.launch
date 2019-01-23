@@ -1,0 +1,3 @@
+<launch>
+<node name="traj_gen" pkg="mav_trajectory_generation_ros" type="traj_gen" />
+</launch>
