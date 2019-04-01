@@ -29,7 +29,7 @@ ros::NodeHandle n;
 
 ros::Publisher traj_pub = n.advertise<trajectory_msgs::MultiDOFJointTrajectory>("/iris/command/trajectory", 20);
 
-ros::Rate sleep_rate(100);
+ros::Rate loop_rate(40);
 
 while(ros::ok())
 {
@@ -47,10 +47,19 @@ mav_trajectory_generation::Vertex start(dimension), middle(dimension), end(dimen
 start.makeStartOrEnd(Eigen::Vector3d(0,0,1), derivative_to_optimize);
 vertices.push_back(start);
 
-middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(1,2,3));
+middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(0,1,1));
 vertices.push_back(middle);
 
-end.makeStartOrEnd(Eigen::Vector3d(2,1,5), derivative_to_optimize);
+middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(1,1,1));
+vertices.push_back(middle);
+
+middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(1,0,1));
+vertices.push_back(middle);
+
+middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(0,0,1));
+vertices.push_back(middle);
+
+end.makeStartOrEnd(Eigen::Vector3d(0,1,3), derivative_to_optimize);
 vertices.push_back(end);
 
 std::vector<double> segment_times;
@@ -118,7 +127,7 @@ i++;
 
 ros::spinOnce();
 vertices.clear();
-sleep_rate.sleep();
+loop_rate.sleep();
 
 }
 
